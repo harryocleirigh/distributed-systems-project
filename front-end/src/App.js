@@ -5,7 +5,7 @@ function App() {
 
   // Setters for form data
   const [name, setName] = useState("");
-  const [dob, setDob] = useState("01/01/1990");
+  const [dob, setDob] = useState("1990-01-01");
   const [loanType, setLoanType] = useState("personal");
   const [loanAmount, setLoanAmount] = useState(0);
   const [loanTermLength, setLoanTermLength] = useState(0);
