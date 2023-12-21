@@ -5,7 +5,7 @@ function App() {
 
   // Setters for form data
   const [name, setName] = useState("");
-  const [dob, setDob] = useState("01/01/1990");
+  const [dob, setDob] = useState("1990-01-01");
   const [loanType, setLoanType] = useState("personal");
   const [loanAmount, setLoanAmount] = useState(0);
   const [loanTermLength, setLoanTermLength] = useState(0);
@@ -15,7 +15,7 @@ function App() {
   const [missedPaymentsFrequency, setMissedPaymentsFrequency] = useState("never");
   const [creditUtilisation, setCreditUtilisation] = useState(0);
   const [creditUseLength, setCreditUseLength] = useState(0);
-  const [newCredit, setNewCredit] = useState("no");
+  const [newCredit, setNewCredit] = useState("No");
   const [debtToIncomeRatio, setDebtToIncomeRatio] = useState(0);
   const [currentDebt, setCurrentDebt] = useState(0);
 
