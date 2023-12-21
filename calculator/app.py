@@ -7,7 +7,9 @@ import redis
 
 app = Flask(__name__)
 CORS(app)
-redis_client = redis.StrictRedis(host='localhost', port=6379, db=0, decode_responses=True)
+# redis_client = redis.StrictRedis(host='localhost', port=6379, db=0, decode_responses=True)
+redis_client = redis.StrictRedis(host='redis', port=6379, db=0, decode_responses=True)
+
 
 @app.route('/calculate_credit_score', methods=['POST'])
 def calculate_credit_score():
@@ -123,4 +125,4 @@ def generate_user_id(name, dob):
     return hashed_user_id
 
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0')
+    app.run(debug=True, host='0.0.0.0', port=5000)
