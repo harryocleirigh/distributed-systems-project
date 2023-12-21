@@ -1,1 +1,1 @@
-# distributed-systems-project
+# Distributed Systems Project
