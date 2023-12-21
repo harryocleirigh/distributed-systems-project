@@ -125,7 +125,7 @@ function App() {
               <option value="finance">Finance</option>
               <option value="healthcare">Healthcare</option>
               <option value="hospitality">Hospitality</option>
-              <option value="informationTechnology">Information Technology</option>
+              <option value="tech">Technology</option>
               <option value="manufacturing">Manufacturing</option>
               <option value="retail">Retail</option>
               <option value="transportation">Transportation</option>
