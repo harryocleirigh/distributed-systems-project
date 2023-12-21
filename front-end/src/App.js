@@ -6,16 +6,16 @@ function App() {
   // Setters for form data
   const [name, setName] = useState("");
   const [dob, setDob] = useState("");
-  const [loanType, setLoanType] = useState("");
+  const [loanType, setLoanType] = useState("personal");
   const [loanAmount, setLoanAmount] = useState(0);
   const [loanTermLength, setLoanTermLength] = useState(0);
   const [employmentStatus, setEmploymentStatus] = useState("");
   const [industry, setIndustry] = useState("");
   const [annualIncome, setAnnualIncome] = useState(0);
-  const [missedPaymentsFrequency, setMissedPaymentsFrequency] = useState("");
+  const [missedPaymentsFrequency, setMissedPaymentsFrequency] = useState("never");
   const [creditUtilisation, setCreditUtilisation] = useState(0);
   const [creditUseLength, setCreditUseLength] = useState(0);
-  const [newCredit, setNewCredit] = useState("");
+  const [newCredit, setNewCredit] = useState("no");
   const [debtToIncomeRatio, setDebtToIncomeRatio] = useState(0);
   const [currentDebt, setCurrentDebt] = useState(0);
 
@@ -54,7 +54,7 @@ function App() {
 
     console.log(data);
 
-    fetch('http://localhost:5000/api/submit', {
+    fetch('http://localhost:8000/api/submit', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
