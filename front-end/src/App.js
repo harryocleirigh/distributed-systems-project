@@ -15,7 +15,7 @@ function App() {
   const [missedPaymentsFrequency, setMissedPaymentsFrequency] = useState("never");
   const [creditUtilisation, setCreditUtilisation] = useState(0);
   const [creditUseLength, setCreditUseLength] = useState(0);
-  const [newCredit, setNewCredit] = useState("no");
+  const [newCredit, setNewCredit] = useState("No");
   const [debtToIncomeRatio, setDebtToIncomeRatio] = useState(0);
   const [currentDebt, setCurrentDebt] = useState(0);
 
