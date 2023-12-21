@@ -5,12 +5,12 @@ function App() {
 
   // Setters for form data
   const [name, setName] = useState("");
-  const [dob, setDob] = useState("");
+  const [dob, setDob] = useState("01/01/1990");
   const [loanType, setLoanType] = useState("personal");
   const [loanAmount, setLoanAmount] = useState(0);
   const [loanTermLength, setLoanTermLength] = useState(0);
-  const [employmentStatus, setEmploymentStatus] = useState("");
-  const [industry, setIndustry] = useState("");
+  const [employmentStatus, setEmploymentStatus] = useState("employed");
+  const [industry, setIndustry] = useState("agriculture");
   const [annualIncome, setAnnualIncome] = useState(0);
   const [missedPaymentsFrequency, setMissedPaymentsFrequency] = useState("never");
   const [creditUtilisation, setCreditUtilisation] = useState(0);

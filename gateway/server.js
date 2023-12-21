@@ -35,22 +35,24 @@ app.use('/api/submit', createProxyMiddleware({
             proxyReq.write(bodyData);
         }
     },
-    onProxyRes: (proxyRes, req, res) => {
-        let body = [];
-        proxyRes.on('data', (chunk) => {
-            body.push(chunk);
-        });
-        proxyRes.on('end', () => {
-            
-            body = Buffer.concat(body).toString();
-            console.log("response from proxied server:", body);
-            
-            const proxiedResponse = JSON.parse(body);
-            req.body.creditScore = proxiedResponse.creditScore;
-            res.json(req.body);
-        });
-    }
+    onProxyRes: handleCreditResponse
 }));
+
+function handleCreditResponse(proxyRes, req, res) {
+    let body = [];
+    proxyRes.on('data', (chunk) => {
+        body.push(chunk);
+    });
+    proxyRes.on('end', () => {
+
+        body = Buffer.concat(body).toString();
+        const proxiedResponse = JSON.parse(body);
+        req.body.creditScore = proxiedResponse.creditScore;
+        const entireJsonResponse = req.body;
+
+        console.log("entireJsonResponse:", entireJsonResponse);
+    });
+}
 
 app.get('/', (req, res) => res.send('API Gateway is running'));
 app.listen(port, () => console.log(`API Gateway listening on port ${port}!`));
