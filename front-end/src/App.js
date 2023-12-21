@@ -28,7 +28,7 @@ function App() {
   });
 
   const handleInputChange = (event) => {
-    setCreditAccounts({ ...creditAccounts, [event.target.value]: event.target.checked });
+    setCreditAccounts({ ...creditAccounts, [event.target.value]: event.target.checked});
   };
 
   const submitApplication = (e) => {
