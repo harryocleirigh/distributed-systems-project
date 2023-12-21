@@ -30,7 +30,7 @@ def calculate_credit_score():
             # JSON sent is the same as cached
             if cached_data_without_credit_score == data:
                 print("Using cache")
-                return jsonify({'username': data['name'], 'creditScore': cached_data['credit_score']})
+                return jsonify({'creditScore': cached_data['credit_score']})
 
         print("NOT in cache")
         credit_score = calculate_score(data)
