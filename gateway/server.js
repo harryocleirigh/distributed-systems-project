@@ -24,7 +24,7 @@ app.use(logger);
 
 // Proxy endpoint to Credit Score Generator
 app.use('/api/submit', createProxyMiddleware({ 
-    target: 'http://127.0.0.1:5000/calculate_credit_score', // URL of our flask app that will create the credit score for our user
+    target: 'http://calculator:5000/calculate_credit_score', // URL of our flask app that will create the credit score for our user
     changeOrigin: true,
     pathRewrite: { '^/api/submit': '' },
     onProxyReq: (proxyReq, req) => {
