@@ -4,11 +4,21 @@ import json
 from flask_cors import CORS
 from flask import Flask, request, jsonify
 import redis
+from pymongo import MongoClient
 
 app = Flask(__name__)
 CORS(app)
-# redis_client = redis.StrictRedis(host='localhost', port=6379, db=0, decode_responses=True)
-redis_client = redis.StrictRedis(host='redis', port=6379, db=0, decode_responses=True)
+
+# connect to redis
+redis_client = redis.StrictRedis(host='localhost', port=6379, db=0, decode_responses=True)
+# redis_client = redis.StrictRedis(host='redis', port=6379, db=0, decode_responses=True)
+
+# connect to MongoDB
+mongo_client = MongoClient('mongodb://localhost:27017/')
+mongodb = mongo_client['credit_scores_db']
+collection = mongodb['credit_scores']
+
+collection.create_index([('user_id', 1)], unique=True)
 
 
 @app.route('/calculate_credit_score', methods=['POST'])
@@ -21,7 +31,7 @@ def calculate_credit_score():
         
         user_id = generate_user_id(data['name'], data['dob'])
 
-        # check if user is in cache
+        # check if user is in Redis cache
         cached_data = redis_client.get(user_id)
 
         if cached_data:
@@ -43,13 +53,29 @@ def calculate_credit_score():
                     # print(response_data)
                     # print("*************")
                     return jsonify(response_data)
+            
         print("************")
         print("NOT in cache")
         print("************")
         credit_score = calculate_score(data)
-
-        # Store the entire JSON object in the cache
+    
+        # Store the entire JSON object in Redis and MongoDB
         data['credit_score'] = credit_score
+
+        # Check if user is in MongoDB
+        mongodb_data = collection.find_one({'_id': user_id})
+        print(f'checking if user_id: {user_id} is in MongoDB')
+
+        if mongodb_data:
+            print("Updating item in MongoDB")
+            collection.update_one({'_id': user_id}, {'$set': data})
+        else:
+            # Add a new item to MongoDB
+            print("Adding item to MongoDB")
+            data['_id'] = user_id
+            collection.insert_one(data)
+
+        # Update or add item in Redis cache
         redis_client.set(user_id, json.dumps(data))
         redis_client.expire(user_id, 3600)
 
@@ -59,6 +85,21 @@ def calculate_credit_score():
         # print("*************")
         return jsonify({'creditScore': credit_score})
     
+    except Exception as e:
+        return jsonify({'error': str(e)})
+    
+# New endpoint to retrieve all data from MongoDB
+@app.route('/get_all_data', methods=['GET'])
+def get_all_data():
+    try:
+        all_data = list(collection.find({}, {'_id': 0}))
+
+        for data in all_data:
+            if 'user_id' in data:
+                data['user_id'] = str(data['user_id'])
+
+        return jsonify(all_data)
+
     except Exception as e:
         return jsonify({'error': str(e)})
 
