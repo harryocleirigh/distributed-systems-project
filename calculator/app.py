@@ -10,16 +10,18 @@ app = Flask(__name__)
 CORS(app)
 
 # connect to redis
-redis_client = redis.StrictRedis(host='localhost', port=6379, db=0, decode_responses=True)
-# redis_client = redis.StrictRedis(host='redis', port=6379, db=0, decode_responses=True)
+# redis_client = redis.StrictRedis(host='localhost', port=6379, db=0, decode_responses=True)
+redis_client = redis.StrictRedis(host='redis', port=6379, db=0, decode_responses=True)
 
 # connect to MongoDB
-mongo_client = MongoClient('mongodb://localhost:27017/')
+# mongo_client = MongoClient('mongodb://localhost:27017/')
+mongo_client = MongoClient('mongodb://mongodb:27017/')
+
+# connect to database credit_scores_db - if it does not exist it will create it
 mongodb = mongo_client['credit_scores_db']
+
+# create collection (table) credit_scores - if it does not exist it will create it
 collection = mongodb['credit_scores']
-
-collection.create_index([('user_id', 1)], unique=True)
-
 
 @app.route('/calculate_credit_score', methods=['POST'])
 def calculate_credit_score():
@@ -30,6 +32,7 @@ def calculate_credit_score():
         # print(" ")
         
         user_id = generate_user_id(data['name'], data['dob'])
+        print(f"Generated user_id: {user_id}")
 
         # check if user is in Redis cache
         cached_data = redis_client.get(user_id)
@@ -62,27 +65,34 @@ def calculate_credit_score():
         # Store the entire JSON object in Redis and MongoDB
         data['credit_score'] = credit_score
 
-        # Check if user is in MongoDB
-        mongodb_data = collection.find_one({'_id': user_id})
-        print(f'checking if user_id: {user_id} is in MongoDB')
 
-        if mongodb_data:
-            print("Updating item in MongoDB")
-            collection.update_one({'_id': user_id}, {'$set': data})
-        else:
-            # Add a new item to MongoDB
-            print("Adding item to MongoDB")
-            data['_id'] = user_id
-            collection.insert_one(data)
+        try: 
+            # Check if user is in MongoDB
+            mongodb_data = collection.find_one({'_id': user_id})
+            print(f'checking if user_id: {user_id} is in MongoDB')
+            
+            if mongodb_data:
+                print(f"Updating the following to mongoDB id: {user_id}")
+                collection.update_one({'_id': user_id}, {'$set': data})
+            else:
+                # Add a new item to MongoDB
+                data['_id'] = user_id
+                print(f"setting key: {data['_id']}")
+                print(f"Adding the following to mongoDB id: {user_id}")
+                collection.insert_one(data)
+
+            print(f"Number of documents in the collection: {collection.count_documents({})}")
+        except Exception as e:
+            print(f"Error in MongoDB operations: {e}")
 
         # Update or add item in Redis cache
         redis_client.set(user_id, json.dumps(data))
         redis_client.expire(user_id, 3600)
 
         # just credit score
-        # print("*************")
-        # print(credit_score)
-        # print("*************")
+        print("*************")
+        print(f"not in cache, credit_score {credit_score}")
+        print("*************")
         return jsonify({'creditScore': credit_score})
     
     except Exception as e:
@@ -95,8 +105,8 @@ def get_all_data():
         all_data = list(collection.find({}, {'_id': 0}))
 
         for data in all_data:
-            if 'user_id' in data:
-                data['user_id'] = str(data['user_id'])
+            if '_id' in data:
+                data['_id'] = str(data['_id'])
 
         return jsonify(all_data)
 
