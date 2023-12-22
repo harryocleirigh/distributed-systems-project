@@ -60,3 +60,29 @@ def process_loan():
 if __name__ == '__main__':
     print("Starting Student Loan Service...")
     app.run(debug=True, host='0.0.0.0', port=5001)
+
+
+# Sample Request to run in second terminal window:
+# curl -X POST -H "Content-Type: application/json" -d '{
+#   "name": "John Doe",
+#   "dob": "1990-01-01",
+#   "loanType": "student",
+#   "loanAmount": 500000,
+#   "loanTermLength": 30,
+#   "creditScore": 720,
+#   "employmentStatus": "employed",
+#   "industry": "tech",
+#   "annualIncome": 100000,
+#   "missedPaymentsFrequency": "never",
+#   "creditUtilisation": 30,
+#   "creditUseLength": 10,
+#   "newCredit": "no",
+#   "creditAccounts": {
+#     "creditCards": true,
+#     "mortgages": false,
+#     "studentLoans": true,
+#     "autoLoans": false
+#   },
+#   "debtToIncomeRatio": 0.3,
+#   "currentDebt": 20000
+# }' http://localhost:5001/process_loan
