@@ -27,11 +27,14 @@ app.post('/register', (req, res) => {
 
 app.post('/getQuotes', async (req, res) => {
 
-    // for every service in the service registry
     for (const service in serviceRegistry) {
         const serviceUrl = serviceRegistry[service];
-        const response = await axios.post(`${serviceUrl}/calculate-loan`, req.body);
-        listOfQuotes.push(response.data);
+        try {
+            const response = await axios.post(`${serviceUrl}/calculate-loan`, req.body);
+            listOfQuotes.push(response.data);
+        } catch (error) {
+            console.error(`Error calling ${serviceUrl}: ${error.message}`);
+        }
     }
 
     console.log(listOfQuotes);

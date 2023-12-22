@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './App.css';
 
 function App() {
@@ -19,6 +19,9 @@ function App() {
   const [debtToIncomeRatio, setDebtToIncomeRatio] = useState(0);
   const [currentDebt, setCurrentDebt] = useState(0);
 
+  // Setters for quote data
+  const [fetchedQouteData, setFetchedQuoteData] = useState([{}]);
+
   // Setters for credit accounts
   const [creditAccounts, setCreditAccounts] = useState({
     creditCards: false,
@@ -31,10 +34,21 @@ function App() {
     setCreditAccounts({ ...creditAccounts, [event.target.value]: event.target.checked});
   };
 
+  const calculateRandomSessionID = () => { 
+    let sessionID = '';
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    const charactersLength = characters.length;
+    for ( let i = 0; i < 32; i++ ) {
+      sessionID += characters.charAt(Math.floor(Math.random() * charactersLength));
+    }
+    return sessionID;
+  }
+
   const submitApplication = (e) => {
     e.preventDefault();
 
     const data = {
+      // sessionID: calculateRandomSessionID(),
       name,
       dob,
       loanType,
@@ -64,11 +78,16 @@ function App() {
     .then(response => response.json())
     .then(data => {
       console.log('Success:', data);
+      setFetchedQuoteData(data);
     })
     .catch((error) => {
       console.error('Error:', error);
     });
   }
+
+  useEffect(() => {
+    console.log("Fetch Quote Data:", fetchedQouteData);
+  }, [fetchedQouteData]);
 
   return (
     <div className="App">
