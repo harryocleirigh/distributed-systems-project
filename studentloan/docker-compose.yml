@@ -1,0 +1,20 @@
+version: '3'
+services:
+  student-loan-registry:
+    build: ./student-loan-registry
+    ports:
+      - "6000:6000"
+    networks:
+      - shared_network
+  student-loan-aib:
+    build: ./student-loan-aib
+    ports:
+      - "6001:6001"
+    depends_on:
+      - student-loan-registry
+    networks:
+      - shared_network
+      
+networks:
+  shared_network:
+    external: true
