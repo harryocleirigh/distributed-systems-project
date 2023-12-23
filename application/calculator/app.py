@@ -5,6 +5,7 @@ from flask_cors import CORS
 from flask import Flask, request, jsonify
 import redis
 from pymongo import MongoClient
+from redis import ConnectionError as RedisConnectionError
 
 app = Flask(__name__)
 CORS(app)
@@ -29,8 +30,6 @@ def calculate_credit_score():
         data = request.get_json()
         print("Received data")
         print(data)
-        # print(" ")
-        
         user_id = generate_user_id(data['name'], data['dob'])
         print(f"Generated user_id: {user_id}")
 
@@ -87,7 +86,9 @@ def calculate_credit_score():
 
         # Update or add item in Redis cache
         redis_client.set(user_id, json.dumps(data))
-        redis_client.expire(user_id, 3600)
+
+        # store in the cache for 24 hours
+        redis_client.expire(user_id, 86400)
 
         # just credit score
         print("*************")
