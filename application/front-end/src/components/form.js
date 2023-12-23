@@ -1,7 +1,9 @@
 import React from "react";
 import { useState, useEffect } from 'react';
 
-const Form = ({fetchedQouteData, setFetchedQuoteData, setHasGottenQuote}) => {
+const Form = ({fetchedQuotes, setFetchedQuotes, setHasGottenQuote}) => {
+
+  const [isQuoteDataFetched, setIsQuoteDataFetched] = useState(false);
 
       // Setters for form data
   const [name, setName] = useState("");
@@ -41,9 +43,9 @@ const Form = ({fetchedQouteData, setFetchedQuoteData, setHasGottenQuote}) => {
     return sessionID;
   }
 
-  const submitApplication = (e) => {
+  const submitApplication = async (e) => {
     e.preventDefault();
-
+  
     const data = {
       // sessionID: calculateRandomSessionID(),
       name,
@@ -62,30 +64,40 @@ const Form = ({fetchedQouteData, setFetchedQuoteData, setHasGottenQuote}) => {
       debtToIncomeRatio,
       currentDebt
     };
-
+  
     console.log(data);
-
-    fetch('http://localhost:8000/api/submit', {
+  
+    try {
+      const response = await fetch('http://localhost:8000/api/submit', {
         method: 'POST',
         headers: {
-            'Content-Type': 'application/json',
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify(data),
-    })
-    .then(response => response.json())
-    .then(data => {
-        console.log('Success:', data);
-        setFetchedQuoteData(data);
-        setHasGottenQuote(true);
-    })
-    .catch((error) => {
+      });
+  
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+  
+      const quoteData = await response.json();
+      console.log('Success:', quoteData);
+      
+      setFetchedQuotes(quoteData);
+      setIsQuoteDataFetched(true);
+
+    } catch (error) {
       console.error('Error:', error);
-    });
+    }
   }
 
   useEffect(() => {
-    console.log("Fetch Quote Data:", fetchedQouteData);
-  }, [fetchedQouteData]);
+    if (isQuoteDataFetched) {
+      setHasGottenQuote(true);
+      console.log("Binary in Use Effect on Form:", isQuoteDataFetched);
+      console.log("Quotes in Use Effect on Form:", fetchedQuotes);
+    }
+  }, [isQuoteDataFetched]);
 
     return(
     <div className='application-form-container'>
