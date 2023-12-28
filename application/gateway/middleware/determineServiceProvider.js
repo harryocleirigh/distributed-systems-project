@@ -14,7 +14,7 @@ function determineServiceProvider(response) {
     } else if (response.loanType == 'home') {
         return 'home-loan';
     } else if (response.loanType == 'auto') {
-        return 'car-loan';
+        return 'auto-loan';
     } else if (response.loanType == 'personal') {
         return 'personal-loan';
     }
