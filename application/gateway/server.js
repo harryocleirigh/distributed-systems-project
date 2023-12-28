@@ -27,13 +27,13 @@ app.use(logger);
 app.use(request_logger);
 
 // ROUTES:
+app.get('/home', (req, res) => res.send('API Gateway is running'));
+
 app.post('/api/submit', submit)
 
-app.get('/', (req, res) => res.send('API Gateway is running'));
-
-app.get('*', (req, res, next) => {
+app.get('*', (req, res) => {
     res.status(404).send("Unknown route. Please check the URL entered")
-  });
+});
 
 
 // START APP:
