@@ -1,7 +1,7 @@
 import React from "react";
 import { useState, useEffect } from 'react';
 
-const Form = ({fetchedQuotes, setFetchedQuotes, setHasGottenQuote}) => {
+const Form = ({fetchedQuotes, setFetchedQuotes, setHasGottenQuote, setLoanTypeForSummary, setLoanValueForSummary, setLoanMonthsForSummary}) => {
 
   const [isQuoteDataFetched, setIsQuoteDataFetched] = useState(false);
 
@@ -33,6 +33,7 @@ const Form = ({fetchedQuotes, setFetchedQuotes, setHasGottenQuote}) => {
     setCreditAccounts({ ...creditAccounts, [event.target.value]: event.target.checked});
   };
 
+  // Very simple random session ID generator for demo purposes
   const calculateRandomSessionID = () => { 
     let sessionID = '';
     const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
@@ -47,7 +48,7 @@ const Form = ({fetchedQuotes, setFetchedQuotes, setHasGottenQuote}) => {
     e.preventDefault();
   
     const data = {
-      // sessionID: calculateRandomSessionID(),
+      sessionID: calculateRandomSessionID(),
       name,
       dob,
       loanType,
@@ -99,6 +100,25 @@ const Form = ({fetchedQuotes, setFetchedQuotes, setHasGottenQuote}) => {
     }
   }, [isQuoteDataFetched]);
 
+  const handleLoanTypeChange = (e) => {
+    const value = e.target.value;
+    setLoanType(value);
+    setLoanTypeForSummary(value);
+  };
+  
+  const handleLoanValueChange = (e) => {
+    const value = e.target.value;
+    setLoanAmount(value);
+    setLoanValueForSummary(value);
+  }
+
+  const handleLoanTermLengthChange = (e) => {
+    const value = e.target.value;
+    setLoanTermLength(value);
+    setLoanMonthsForSummary(value);
+  }
+
+
     return(
     <div className='application-form-container'>
         <div className='application-header-container'>
@@ -118,7 +138,7 @@ const Form = ({fetchedQuotes, setFetchedQuotes, setHasGottenQuote}) => {
           <h3 className='loan-form-header'> Loan Information</h3>
           <label className='label-header'>
             Loan Type:
-            <select className="label-form" name="loanType" onChange={e => setLoanType(e.target.value)}>
+            <select className="label-form" name="loanType" onChange={handleLoanTypeChange}>
               <option value="personal">Personal</option>
               <option value="home">Home</option>
               <option value="car">Car</option>
@@ -127,11 +147,11 @@ const Form = ({fetchedQuotes, setFetchedQuotes, setHasGottenQuote}) => {
           </label>
           <label className='label-header'>
             Loan Amount:
-            <input className="label-form" type="number" name="loanAmount" onChange={e => setLoanAmount(e.target.value)}/>
+            <input className="label-form" type="number" name="loanAmount" onChange={handleLoanValueChange}/>
           </label>
           <label className='label-header'>
             Loan Term Length (in months):
-            <input className="label-form" type="number" name="loanTermLength" onChange={e => setLoanTermLength(e.target.value)}/>
+            <input className="label-form" type="number" name="loanTermLength" onChange={handleLoanTermLengthChange}/>
           </label>
           <h3 className='loan-form-header'> Employment Information</h3>
           <label className='label-header'>
@@ -205,7 +225,7 @@ const Form = ({fetchedQuotes, setFetchedQuotes, setHasGottenQuote}) => {
             </label>
             <label>
               <input type="checkbox" name="creditAccounts" value="carLoans" checked={creditAccounts.carLoans} onChange={handleInputChange} />
-              <span style={{marginLeft: '12px', fontWeight: 400}}>car Loans</span>
+              <span style={{marginLeft: '12px', fontWeight: 400}}>Car Loans</span>
             </label>
           </label>
           <label className='label-header'>
