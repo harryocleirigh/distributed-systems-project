@@ -7,7 +7,7 @@ const port = 6003;
 app.use(express.json());
 
 const providerName = 'Vendor Finance';
-const linkToImage = "https://vendorfinance.ie/wp-content/uploads/2021/01/VendorFinance_Logo-01.svg";
+const linkToImage = "https://scontent-dub4-1.xx.fbcdn.net/v/t39.30808-6/302692377_499165928880375_6378380000885824443_n.jpg?_nc_cat=107&ccb=1-7&_nc_sid=efb6e6&_nc_ohc=IWrPqcTKVr0AX-pg0tS&_nc_ht=scontent-dub4-1.xx&oh=00_AfDk5BdVUteqSiDi-ilWnRVunCISib07tA3BaQmKOCj_kw&oe=65932300";
 
 const eurekaClient = new Eureka({
   instance: { 
@@ -64,7 +64,7 @@ app.post('/calculate-loan', (req, res) => {
     } else if (creditScore < 700) {
         interestRate = 0.145;
     } else {
-        interestRate = 0.777777;
+        interestRate = 0.0777777;
     }
 
     // Calculate the monthly payment
