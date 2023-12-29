@@ -26,7 +26,7 @@ const Form = ({fetchedQuotes, setFetchedQuotes, setHasGottenQuote}) => {
     creditCards: false,
     mortgages: false,
     studentLoans: false,
-    autoLoans: false
+    carLoans: false
   });
 
   const handleInputChange = (event) => {
@@ -121,7 +121,7 @@ const Form = ({fetchedQuotes, setFetchedQuotes, setHasGottenQuote}) => {
             <select className="label-form" name="loanType" onChange={e => setLoanType(e.target.value)}>
               <option value="personal">Personal</option>
               <option value="home">Home</option>
-              <option value="auto">Auto</option>
+              <option value="car">Car</option>
               <option value="student">Student</option>
             </select>
           </label>
@@ -204,8 +204,8 @@ const Form = ({fetchedQuotes, setFetchedQuotes, setHasGottenQuote}) => {
               <span style={{marginLeft: '12px', fontWeight: 400}}>Student Loans</span>
             </label>
             <label>
-              <input type="checkbox" name="creditAccounts" value="autoLoans" checked={creditAccounts.autoLoans} onChange={handleInputChange} />
-              <span style={{marginLeft: '12px', fontWeight: 400}}>Auto Loans</span>
+              <input type="checkbox" name="creditAccounts" value="carLoans" checked={creditAccounts.carLoans} onChange={handleInputChange} />
+              <span style={{marginLeft: '12px', fontWeight: 400}}>car Loans</span>
             </label>
           </label>
           <label className='label-header'>

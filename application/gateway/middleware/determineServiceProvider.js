@@ -13,8 +13,8 @@ function determineServiceProvider(response) {
         return 'student-loan';
     } else if (response.loanType == 'home') {
         return 'home-loan';
-    } else if (response.loanType == 'auto') {
-        return 'auto-loan';
+    } else if (response.loanType == 'car') {
+        return 'car-loan';
     } else if (response.loanType == 'personal') {
         return 'personal-loan';
     }

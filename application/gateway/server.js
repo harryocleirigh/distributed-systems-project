@@ -40,14 +40,6 @@ app.get('*', (req, res) => {
 const port = 8000;
 app.listen(port, () => console.log(`API Gateway listening on port ${port}!`));
 
-
-
-
-
-
-
-
-
 /// UNUSED CODE:
 
 // const { createProxyMiddleware } = require('http-proxy-middleware');

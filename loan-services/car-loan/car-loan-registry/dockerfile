@@ -1,0 +1,11 @@
+FROM node:14-alpine
+WORKDIR /app
+RUN apk update && apk add netcat-openbsd
+COPY package*.json ./
+RUN npm install
+COPY . .
+COPY entrypoint.sh entrypoint.sh
+RUN chmod +x ./entrypoint.sh
+EXPOSE 6000
+ENTRYPOINT ["./entrypoint.sh"]
+CMD [ "node", "server.js" ]

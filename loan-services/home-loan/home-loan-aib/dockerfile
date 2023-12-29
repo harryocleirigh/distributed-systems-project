@@ -4,4 +4,5 @@ COPY package*.json ./
 RUN npm install
 COPY . .
 EXPOSE 6001
+RUN sleep 15
 CMD [ "node", "server.js" ]

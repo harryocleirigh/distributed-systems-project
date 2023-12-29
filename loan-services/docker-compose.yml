@@ -1,9 +1,18 @@
 version: '3'
 services:
-
+# Eureka server for service discovery
+  eureka-server:
+    image: rodolfoalvarenga/eureka-server
+    ports:
+      - "8761:8761"
+    networks:
+      - shared_network
+  
 # Student loan service
   student-loan-registry:
     build: ./student-loan/student-loan-registry
+    depends_on:
+      - eureka-server
     # ports:
     #   - "6000:6000" I have removed port mapping. Now all loan services use port 6000
     #                 This way gateway doesnt need to know port of service (just sends to 'name:6000')
@@ -21,6 +30,8 @@ services:
 # Personal loan service
   personal-loan-registry:
     build: ./personal-loan/personal-loan-registry
+    depends_on:
+      - eureka-server
     # ports:
     #   - "6002:6002"
     networks:
@@ -37,6 +48,8 @@ services:
 # Home loan service
   home-loan-registry:
     build: ./home-loan/home-loan-registry
+    depends_on:
+      - eureka-server
     # ports:
     #   - "6004:6004"
     networks:
@@ -50,19 +63,40 @@ services:
     networks:
       - shared_network
 
-# Auto loan service
-  auto-loan-registry:
-    build: ./auto-loan/auto-loan-registry
-    # ports:
-    #   - "6006:6006"
+# Car loan service
+  car-loan-registry:
+    build: ./car-loan/car-loan-registry
+    depends_on:
+      - eureka-server
     networks:
       - shared_network
-  auto-loan-aib:
-    build: ./auto-loan/auto-loan-aib
-    # ports:
-    #   - "6007:6007"
+  car-loan-aib:
+    build: ./car-loan/car-loan-aib
     depends_on:
-      - auto-loan-registry
+      - car-loan-registry
+      - eureka-server
+    networks:
+      - shared_network
+
+  car-loan-avant-money:
+    build: ./car-loan/car-loan-avant-money
+    depends_on:
+      - car-loan-registry
+      - eureka-server
+    networks:
+      - shared_network
+  car-loan-vendor-finance:
+    build: ./car-loan/car-loan-vendor-finance
+    depends_on:
+      - car-loan-registry
+      - eureka-server
+    networks:
+      - shared_network
+  car-loan-kbc-bank:
+    build: ./car-loan/car-loan-kbc-bank
+    depends_on:
+      - car-loan-registry
+      - eureka-server
     networks:
       - shared_network
       
