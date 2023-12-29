@@ -1,29 +1,56 @@
-// Server for API Gateway // 
+//////////////////////////////// 
+//    API GATEWAY SERVER      // 
+////////////////////////////////
+
+// Responsible for handling client loan requests.
+// Requests service of 'calculator' to determine clients credit score
+// Requests service of loan service providers to issue loan offer(s)
+
+// > MAIN of the Gateway server application
+// > Handles the running of application, intitiation of middleware
+// > Allowed routes are defined below
+
+////////////////////////////////
 
 const express = require('express');
-// const { createProxyMiddleware } = require('http-proxy-middleware');
-const cors = require('cors'); 
-const axios = require('axios');
-
 const app = express();
-const port = 8000;
+const cors = require('cors'); 
+const submit = require('./controllers/submit');
+const rateLimiter = require('./middleware/rateLimiter')
+const {logger, request_logger} = require("./middleware/logger")
 
+// MIDDLEWARE:
 app.use(cors());
 app.use(express.json());
+app.use(rateLimiter)
+app.use(logger);
+app.use(request_logger);
 
-// Middleware for logging
-app.use((req, res, next) => {
-    console.log(`Received request for ${req.url}`);
-    next();
+// ROUTES:
+app.get('/home', (req, res) => res.send('API Gateway is running'));
+
+app.post('/api/submit', submit)
+
+app.get('*', (req, res) => {
+    res.status(404).send("Unknown route. Please check the URL entered")
 });
 
-const logger = (req, res, next) => {
-    console.log(`[${new Date().toISOString()}] ${req.method} to ${req.url}`);
-    console.log('Body:', req.body);
-    next();
-};
 
-app.use(logger);
+// START APP:
+const port = 8000;
+app.listen(port, () => console.log(`API Gateway listening on port ${port}!`));
+
+
+
+
+
+
+
+
+
+/// UNUSED CODE:
+
+// const { createProxyMiddleware } = require('http-proxy-middleware');
 
 // // Proxy endpoint to Credit Score Generator
 // app.use('/api/submit', createProxyMiddleware({ 
@@ -71,43 +98,3 @@ app.use(logger);
 //         }
 //     });
 // }
-
-app.post('/api/submit', async (req, res) => {
-    try {
-        
-        const calculatorResponse = await axios.post('http://calculator:5000/calculate_credit_score', req.body);
-        console.log('Calculator response:', calculatorResponse.data);
-
-        // spread operator to combine the two objects
-        const completeJSONRes = { ...req.body, creditScore: calculatorResponse.data.creditScore };
-
-        // Determine the service provider and make the request
-        const serviceProviderType = determineServiceProvider(completeJSONRes);
-
-        const serviceProviderResponse = await axios.post(`http://${serviceProviderType}-registry:6000/getQuotes`, completeJSONRes);
-        
-        console.log('Service provider response:', serviceProviderResponse.data);
-        // Send the response from the service provider to the client
-        res.json(serviceProviderResponse.data);
-    } catch (error) {
-        console.error('Error:', error);
-        res.status(500).json({ error: 'An error occurred while processing your request.' });
-    }
-});
-
-
-function determineServiceProvider(response) {
-
-    if (response.loanType == 'student') {
-        return 'student-loan';
-    } else if (response.loanType == 'home') {
-        return 'home-loan';
-    } else if (response.loanType == 'auto') {
-        return 'car-loan';
-    } else if (response.loanType == 'personal') {
-        return 'personal-loan';
-    }
-}
-
-app.get('/', (req, res) => res.send('API Gateway is running'));
-app.listen(port, () => console.log(`API Gateway listening on port ${port}!`));

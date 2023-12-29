@@ -1,0 +1,71 @@
+version: '3'
+services:
+
+# Student loan service
+  student-loan-registry:
+    build: ./student-loan/student-loan-registry
+    # ports:
+    #   - "6000:6000" I have removed port mapping. Now all loan services use port 6000
+    #                 This way gateway doesnt need to know port of service (just sends to 'name:6000')
+    networks:
+      - shared_network
+  student-loan-aib:
+    build: ./student-loan/student-loan-aib
+    # ports:
+    #   - "6001:6001"
+    depends_on:
+      - student-loan-registry
+    networks:
+      - shared_network
+
+# Personal loan service
+  personal-loan-registry:
+    build: ./personal-loan/personal-loan-registry
+    # ports:
+    #   - "6002:6002"
+    networks:
+      - shared_network
+  personal-loan-aib:
+    build: ./personal-loan/personal-loan-aib
+    # ports:
+    #   - "6003:6003"
+    depends_on:
+      - personal-loan-registry
+    networks:
+      - shared_network
+
+# Home loan service
+  home-loan-registry:
+    build: ./home-loan/home-loan-registry
+    # ports:
+    #   - "6004:6004"
+    networks:
+      - shared_network
+  home-loan-aib:
+    build: ./home-loan/home-loan-aib
+    # ports:
+    #   - "6005:6005"
+    depends_on:
+      - home-loan-registry
+    networks:
+      - shared_network
+
+# Auto loan service
+  auto-loan-registry:
+    build: ./auto-loan/auto-loan-registry
+    # ports:
+    #   - "6006:6006"
+    networks:
+      - shared_network
+  auto-loan-aib:
+    build: ./auto-loan/auto-loan-aib
+    # ports:
+    #   - "6007:6007"
+    depends_on:
+      - auto-loan-registry
+    networks:
+      - shared_network
+      
+networks:
+  shared_network:
+    external: true
