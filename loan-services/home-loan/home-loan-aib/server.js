@@ -1,12 +1,50 @@
+const Eureka = require('eureka-js-client').Eureka;
 const express = require('express');
-const axios = require('axios');
 const app = express();
 const port = 6001;
 
 app.use(express.json());
 
 const providerName = 'Allied Irish Bank';
-const linkToImage = "https://pbs.twimg.com/profile_images/1277622308715343872/TcUC4R0S_400x400.jpg"
+const linkToImage = "https://pbs.twimg.com/profile_images/1277622308715343872/TcUC4R0S_400x400.jpg";
+
+const eurekaClient = new Eureka({
+  instance: { 
+    app: 'HOME-LOAN-SERVICES', // Use a common Eureka app ID for all related services
+    instanceId: 'home-loan-aib', // Unique instance ID for this service
+    hostName: 'home-loan-aib',
+    ipAddr: 'home-loan-aib', // Adjust as needed for Docker networking
+    statusPageUrl: `http://home-loan-aib:${port}/info`,
+    healthCheckUrl: `http://home-loan-aib:${port}/health`,
+    port: {
+      '$': port,
+      '@enabled': true,
+    },
+    vipAddress: 'home-loan-aib',
+    dataCenterInfo: {
+      '@class': 'com.netflix.appinfo.InstanceInfo$DefaultDataCenterInfo',
+      name: 'MyOwn',
+    }
+  },
+  eureka: {
+    host: 'eureka-server',
+    port: 8761,
+    servicePath: '/eureka/apps/'
+  }
+});
+
+
+eurekaClient.start(error => {
+  if (error) {
+    console.log('Eureka registration failed:', error);
+  } else {
+    console.log('Eureka registration complete');
+  }
+});
+
+eurekaClient.on('/info', () => {
+  console.log('Eureka client registered');
+});
 
 app.post('/calculate-loan', (req, res) => {
 
@@ -55,18 +93,5 @@ app.post('/calculate-loan', (req, res) => {
 });
 
 app.listen(port, async () => {
-    
-    console.log(`AIB Home loan service listening at http://home-loan-aib:${port}`);
-
-    // Register with the control server
-    try {
-        const res = await axios.post('http://home-loan-registry:6000/register', {
-            serviceName: 'home-loan-aib',
-            // serviceUrl: `http://homeloan-aib:${port}`
-            serviceUrl: `http://home-loan-aib:${port}`
-        });
-        console.log(res.data);
-    } catch (err) {
-        console.error('Failed to register with control server:', err.message);
-    }
+    console.log(`AIB home loan service listening at http://home-loan-aib:${port}`);
 });

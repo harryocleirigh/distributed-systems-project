@@ -94,5 +94,5 @@ app.post('/calculate-loan', (req, res) => {
 });
 
 app.listen(port, async () => {
-    console.log(`AIB car loan service listening at http://car-loan-aib:${port}`);
+    console.log(`Avant Money car loan service listening at http://car-loan-avant-money:${port}`);
 });

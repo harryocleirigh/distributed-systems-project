@@ -1,6 +1,5 @@
 const Eureka = require('eureka-js-client').Eureka;
 const express = require('express');
-const axios = require('axios');
 const app = express();
 const port = 6004;
 
@@ -94,5 +93,5 @@ app.post('/calculate-loan', (req, res) => {
 });
 
 app.listen(port, async () => {
-    console.log(`AIB car loan service listening at http://car-loan-aib:${port}`);
+    console.log(`KBC car loan service listening at http://car-loan-kbc:${port}`);
 });
