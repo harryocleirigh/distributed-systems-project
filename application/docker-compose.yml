@@ -36,6 +36,14 @@ services:
       - 8000:8000
     networks:
       - shared_network
+  rabbitmq:
+    image: "rabbitmq:3.13-rc-management"
+    container_name: rabbitmq_container
+    ports:
+      - "5672:5672"  # AMQP
+      - "15672:15672"  # Management UI
+    networks:
+      - shared_network
 
 networks:
   shared_network:

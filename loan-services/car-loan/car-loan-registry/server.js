@@ -4,6 +4,8 @@ const express = require('express');
 const cors = require('cors'); 
 const axios = require('axios');
 const app = express();
+const produce = require('./rabbitmq/producer');
+const consume = require('./rabbitmq/consumer');
 app.use(cors());
 app.use(express.json());
 const port = 6000;
@@ -39,27 +41,51 @@ client.start(error => {
   console.log(error || 'Eureka registration complete');
 });
 
-app.post('/getQuotes', async (req, res) => {
+consume('car-loan', async (message) => {
+    const services = client.getInstancesByAppId('CAR-LOAN-SERVICES'); // CAR-LOAN-SERVICE is the Eureka app ID for your car loan services
+    let quotes = [];
 
-  const services = client.getInstancesByAppId('CAR-LOAN-SERVICES'); // CAR-LOAN-SERVICE is the Eureka app ID for your car loan services
-  let quotes = [];
+    const messageContent = JSON.parse(message.content.toString());
 
-  for (const service of services) {
+    for (const service of services) {
     
-    const serviceUrl = `http://${service.ipAddr}:${service.port.$}/calculate-loan`;
+        const serviceUrl = `http://${service.ipAddr}:${service.port.$}/calculate-loan`;
+    
+        console.log(`Calling ${serviceUrl}`);
+    
+        try {
+          const response = await axios.post(serviceUrl, messageContent);
+          quotes.push(response.data);
+        } catch (error) {
+          console.error(`Error calling ${serviceUrl}: ${error.message}`);
+        }
+      }
+    
+    console.log("QUOTES: ", quotes)
+    produce('offers-queue', JSON.stringify(quotes))
+})
 
-    console.log(`Calling ${serviceUrl}`);
+// app.post('/getQuotes', async (req, res) => {
 
-    try {
-      const response = await axios.post(serviceUrl, req.body);
-      quotes.push(response.data);
-    } catch (error) {
-      console.error(`Error calling ${serviceUrl}: ${error.message}`);
-    }
-  }
+//   const services = client.getInstancesByAppId('CAR-LOAN-SERVICES'); // CAR-LOAN-SERVICE is the Eureka app ID for your car loan services
+//   let quotes = [];
 
-  res.json(quotes);
-});
+//   for (const service of services) {
+    
+//     const serviceUrl = `http://${service.ipAddr}:${service.port.$}/calculate-loan`;
+
+//     console.log(`Calling ${serviceUrl}`);
+
+//     try {
+//       const response = await axios.post(serviceUrl, req.body);
+//       quotes.push(response.data);
+//     } catch (error) {
+//       console.error(`Error calling ${serviceUrl}: ${error.message}`);
+//     }
+//   }
+
+//   res.json(quotes);
+// });
 
 app.listen(port, () => {
   console.log(`Service registry listening at http://car-loan-registry:${port}`);
