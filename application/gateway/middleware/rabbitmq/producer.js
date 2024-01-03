@@ -1,5 +1,13 @@
+/// Producer for RabbitMQ
+
 const connect = require('./setup');
 
+/**
+ * Producer function responsible for sending messages to a specified queue
+ * Accepts JSON messages
+ * @param {*} queue 
+ * @param {*} message 
+ */
 async function produce(queue, message) {
   const { channel, connection } = await connect();
 

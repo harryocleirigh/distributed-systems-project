@@ -1,4 +1,8 @@
+# Docker Compose file for the our systems loan services
+# Both registries and providers are built for each loan type
+
 version: '3'
+
 services:
 # Eureka server for service discovery
   eureka-server:
@@ -8,7 +12,7 @@ services:
     networks:
       - shared_network
   
-# Student loan service
+# Student loan services
   student-loan-registry:
     build: ./student-loan/student-loan-registry
     depends_on:
@@ -44,7 +48,7 @@ services:
     networks:
       - shared_network
 
-# Personal loan service
+# Personal loan services
   personal-loan-registry:
     build: ./personal-loan/personal-loan-registry
     depends_on:
@@ -80,7 +84,7 @@ services:
     networks:
       - shared_network
 
-# Home loan service
+# Home loan services
   home-loan-registry:
     build: ./home-loan/home-loan-registry
     depends_on:
@@ -151,7 +155,8 @@ services:
       - eureka-server
     networks:
       - shared_network
-      
+
+# Network for system (Note: make sure to create this manually (see readme))
 networks:
   shared_network:
     external: true

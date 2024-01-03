@@ -1,5 +1,13 @@
+/// Consumer for RabbitMQ
+
 const connect = require('./setup');
 
+/**
+ * Consumer function responsible for handling recieved messages to a given queue
+ * This consumer deletes itself from the server after it has finished handling a message
+ * @param {*} queue 
+ * @param {*} callback 
+ */
 async function consume(queue, callback) {
   const { channel, connection } = await connect();
 
@@ -14,7 +22,7 @@ async function consume(queue, callback) {
       if (message) {
         callback(message);
         
-        channel.close()
+        channel.close() // delete the queue after callback
       }
     },
     { noAck: true }

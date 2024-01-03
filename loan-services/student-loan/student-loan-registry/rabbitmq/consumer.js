@@ -1,5 +1,12 @@
+/// Consumer for RabbitMQ
+
 const connect = require('./setup');
 
+/**
+ * Consumer function responsible for handling recieved messages to a given queue
+ * @param {*} queue 
+ * @param {*} callback 
+ */
 async function consume(queue, callback) {
   const { channel, connection } = await connect();
 

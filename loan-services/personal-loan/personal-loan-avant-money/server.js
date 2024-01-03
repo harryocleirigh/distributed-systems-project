@@ -1,3 +1,7 @@
+/// Avant Money Personal Loan Provider Service
+/// Responsible for recieving a client request from the Personal Loan Registry
+/// and calculating a loan offer. This loan offer is returned to the Registry via HTTP
+
 const Eureka = require('eureka-js-client').Eureka;
 const express = require('express');
 const app = express();
@@ -8,6 +12,9 @@ app.use(express.json());
 const providerName = 'Avant Money';
 const linkToImage = "https://pbs.twimg.com/profile_images/1374701476581412868/bydIeIxt_400x400.jpg";
 
+/**
+ * Configure and Instantiate an Avant Money personal loan Eureka Client
+ */
 const eurekaClient = new Eureka({
   instance: { 
     app: 'PERSONAL-LOAN-SERVICES', // Use a common Eureka app ID for all related services
@@ -33,7 +40,7 @@ const eurekaClient = new Eureka({
   }
 });
 
-
+// Register with the personal loan service discovery server
 eurekaClient.start(error => {
   if (error) {
     console.log('Eureka registration failed:', error);
@@ -42,10 +49,19 @@ eurekaClient.start(error => {
   }
 });
 
+// Notify of successful registration
 eurekaClient.on('/info', () => {
   console.log('Eureka client registered');
 });
 
+/**
+ * Route for calculating loan offers
+ * Takes a client information object as a request
+ * Retuns a loan ofer response
+ * 
+ * The loan offer is calculated by combing the requested loan details with
+ * Client details like credit score.
+ */
 app.post('/calculate-loan', (req, res) => {
 
     // Parse the JSON request body
@@ -92,6 +108,7 @@ app.post('/calculate-loan', (req, res) => {
     
 });
 
+/// Start the Avant Money personal loan service.
 app.listen(port, async () => {
     console.log(`Avant Money personal loan service listening at http://personal-loan-avant-money:${port}`);
 });

@@ -1,3 +1,7 @@
+/// Vendor Finance Student Loan Provider Service
+/// Responsible for recieving a client request from the Student Loan Registry
+/// and calculating a loan offer. This loan offer is returned to the Registry via HTTP
+
 const Eureka = require('eureka-js-client').Eureka;
 const express = require('express');
 const app = express();
@@ -8,6 +12,9 @@ app.use(express.json());
 const providerName = 'Vendor Finance';
 const linkToImage = "https://scontent-dub4-1.xx.fbcdn.net/v/t39.30808-6/302692377_499165928880375_6378380000885824443_n.jpg?_nc_cat=107&ccb=1-7&_nc_sid=efb6e6&_nc_ohc=IWrPqcTKVr0AX-pg0tS&_nc_ht=scontent-dub4-1.xx&oh=00_AfDk5BdVUteqSiDi-ilWnRVunCISib07tA3BaQmKOCj_kw&oe=65932300";
 
+/**
+ * Configure and Instantiate a Vendor Finance student loan Eureka Client
+ */
 const eurekaClient = new Eureka({
   instance: { 
     app: 'STUDENT-LOAN-SERVICES', // Use a common Eureka app ID for all related services
@@ -33,7 +40,7 @@ const eurekaClient = new Eureka({
   }
 });
 
-
+// Register with the student loan service discovery server
 eurekaClient.start(error => {
   if (error) {
     console.log('Eureka registration failed:', error);
@@ -42,10 +49,19 @@ eurekaClient.start(error => {
   }
 });
 
+// Notify of successful registration
 eurekaClient.on('/info', () => {
   console.log('Eureka client registered');
 });
 
+/**
+ * Route for calculating loan offers
+ * Takes a client information object as a request
+ * Retuns a loan ofer response
+ * 
+ * The loan offer is calculated by combing the requested loan details with
+ * Client details like credit score.
+ */
 app.post('/calculate-loan', (req, res) => {
 
     // Parse the JSON request body
@@ -92,6 +108,7 @@ app.post('/calculate-loan', (req, res) => {
     
 });
 
+/// Start the AIB student loan service.
 app.listen(port, async () => {
     console.log(`Vendor Finance student loan service listening at http://student-loan-vendor-finance:${port}`);
 });

@@ -35,12 +35,6 @@ const submit = async (req, res) => {
 
         produce(serviceProviderType, completeJSONRes)
     
-        // // const serviceProviderResponse = await axios.post(`http://${serviceProviderType}-registry:6000/getQuotes`, completeJSONRes);
- 
-        // console.log('Service provider response:', serviceProviderResponse.data);
-        // // // Send the response from the service provider to the client
-
-        // res.json(serviceProviderResponse.data);
     } catch (error) {
         console.error('Error:', error);
         res.status(500).json({ error: 'An error occurred while processing your request.' });

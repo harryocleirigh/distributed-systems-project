@@ -1,4 +1,8 @@
-// Service registry for Car Loan service cluster
+// Service Registry for Car Loan service cluster
+// Responsible for maintaining a list of providers by using Eurkea.
+// Listens to the 'car-loan' rabbit messaging queue for client requests
+// Sends loan offer to the gateway's 'offers-queue' for handling
+
 const Eureka = require('eureka-js-client').Eureka;
 const express = require('express');
 const cors = require('cors'); 
@@ -10,9 +14,9 @@ app.use(cors());
 app.use(express.json());
 const port = 6000;
 
-// const serviceRegistry = {};
-// const listOfQuotes = [];
-
+/**
+ * Configure and Instantiate a Eureka Car Loan Discovery Server
+ */
 const client = new Eureka({
   instance: {
     app: 'car-loan-registry',
@@ -37,10 +41,19 @@ const client = new Eureka({
   }
 });
 
+// Start the car-loan discovery server
 client.start(error => {
   console.log(error || 'Eureka registration complete');
 });
 
+/**
+ * Consumer for handling messages sent to the car-loan messaging queue
+ * Recieved a message as input (client-info) and relays this to all services attached to
+ * The Eureka car-loan discovery server
+ * 
+ * If successful responses are received, produce a message to the gateway's offers queue.
+ * This message is the combined loan offers of all attached services.
+ */
 consume('car-loan', async (message) => {
     const services = client.getInstancesByAppId('CAR-LOAN-SERVICES'); // CAR-LOAN-SERVICE is the Eureka app ID for your car loan services
     let quotes = [];
@@ -60,69 +73,11 @@ consume('car-loan', async (message) => {
           console.error(`Error calling ${serviceUrl}: ${error.message}`);
         }
       }
-    
-    console.log("QUOTES: ", quotes)
+
     produce('offers-queue', JSON.stringify(quotes))
 })
 
-// app.post('/getQuotes', async (req, res) => {
-
-//   const services = client.getInstancesByAppId('CAR-LOAN-SERVICES'); // CAR-LOAN-SERVICE is the Eureka app ID for your car loan services
-//   let quotes = [];
-
-//   for (const service of services) {
-    
-//     const serviceUrl = `http://${service.ipAddr}:${service.port.$}/calculate-loan`;
-
-//     console.log(`Calling ${serviceUrl}`);
-
-//     try {
-//       const response = await axios.post(serviceUrl, req.body);
-//       quotes.push(response.data);
-//     } catch (error) {
-//       console.error(`Error calling ${serviceUrl}: ${error.message}`);
-//     }
-//   }
-
-//   res.json(quotes);
-// });
-
+// Start The Registry Service
 app.listen(port, () => {
   console.log(`Service registry listening at http://car-loan-registry:${port}`);
 });
-
-// app.post('/register', (req, res) => {
-
-//     const { serviceName, serviceUrl } = req.body;
-//     if (!serviceName || !serviceUrl) {
-//         return res.status(400).send('Invalid service info');
-//     }
-
-//     // Register the service with the registry
-//     serviceRegistry[serviceName] = serviceUrl;
-
-//     res.json({ message: 'Service registered successfully' });
-
-//     console.log(serviceRegistry);
-// });
-
-// app.post('/getQuotes', async (req, res) => {
-
-//     for (const service in serviceRegistry) {
-//         const serviceUrl = serviceRegistry[service];
-//         try {
-//             const response = await axios.post(`${serviceUrl}/calculate-loan`, req.body);
-//             listOfQuotes.push(response.data);
-//         } catch (error) {
-//             console.error(`Error calling ${serviceUrl}: ${error.message}`);
-//         }
-//     }
-
-//     console.log(listOfQuotes);
-
-//     res.json(listOfQuotes);
-// });
-
-// app.listen(port, () => {
-//     console.log(`Service registry listening at http://car-loan-registry:${port}`);
-// });
