@@ -1,27 +1,26 @@
 const Eureka = require('eureka-js-client').Eureka;
 const express = require('express');
-const axios = require('axios');
 const app = express();
-const port = 6003;
+const port = 6004;
 
 app.use(express.json());
 
-const providerName = 'Vendor Finance';
-const linkToImage = "https://scontent-dub4-1.xx.fbcdn.net/v/t39.30808-6/302692377_499165928880375_6378380000885824443_n.jpg?_nc_cat=107&ccb=1-7&_nc_sid=efb6e6&_nc_ohc=IWrPqcTKVr0AX-pg0tS&_nc_ht=scontent-dub4-1.xx&oh=00_AfDk5BdVUteqSiDi-ilWnRVunCISib07tA3BaQmKOCj_kw&oe=65932300";
+const providerName = 'Bank Of Ireland';
+const linkToImage = "https://pbs.twimg.com/profile_images/1675809938487095297/DlQNzfCA_400x400.jpg";
 
 const eurekaClient = new Eureka({
   instance: { 
-    app: 'PERSONAL-LOAN-SERVICES', // Use a common Eureka app ID for all related services
-    instanceId: 'personal-loan-vendor-finance', // Unique instance ID for this service
-    hostName: 'personal-loan-vendor-finance',
-    ipAddr: 'personal-loan-vendor-finance', // Adjust as needed for Docker networking
-    statusPageUrl: `http://personal-loan-vendor-finance:${port}/info`,
-    healthCheckUrl: `http://personal-loan-vendor-finance:${port}/health`,
+    app: 'STUDENT-LOAN-SERVICES', // Use a common Eureka app ID for all related services
+    instanceId: 'student-loan-boi', // Unique instance ID for this service
+    hostName: 'student-loan-boi',
+    ipAddr: 'student-loan-boi', // Adjust as needed for Docker networking
+    statusPageUrl: `http://student-loan-boi:${port}/info`,
+    healthCheckUrl: `http://student-loan-boi:${port}/health`,
     port: {
       '$': port,
       '@enabled': true,
     },
-    vipAddress: 'personal-loan-vendor-finance',
+    vipAddress: 'student-loan-boi',
     dataCenterInfo: {
       '@class': 'com.netflix.appinfo.InstanceInfo$DefaultDataCenterInfo',
       name: 'MyOwn',
@@ -60,11 +59,11 @@ app.post('/calculate-loan', (req, res) => {
     let interestRate = 0;
     
     if (creditScore < 600) {
-        interestRate = 0.17;
+        interestRate = 0.081;
     } else if (creditScore < 700) {
-        interestRate = 0.145;
+        interestRate = 0.078;
     } else {
-        interestRate = 0.0777777;
+        interestRate = 0.072;
     }
 
     // Calculate the monthly payment
@@ -94,5 +93,5 @@ app.post('/calculate-loan', (req, res) => {
 });
 
 app.listen(port, async () => {
-    console.log(`Vendor Finance personal loan service listening at http://personal-loan-vendor-finance:${port}`);
+    console.log(`BOI student loan service listening at http://student-loan-boi:${port}`);
 });

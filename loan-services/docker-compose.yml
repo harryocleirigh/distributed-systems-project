@@ -22,8 +22,8 @@ services:
       - eureka-server
     networks:
       - shared_network
-  student-loan-avant-money:
-    build: ./student-loan/student-loan-avant-money
+  student-loan-credit-union:
+    build: ./student-loan/student-loan-credit-union
     depends_on:
       - student-loan-registry
       - eureka-server
@@ -36,8 +36,8 @@ services:
       - eureka-server
     networks:
       - shared_network
-  student-loan-kbc-bank:
-    build: ./student-loan/student-loan-kbc-bank
+  student-loan-boi:
+    build: ./student-loan/student-loan-boi
     depends_on:
       - student-loan-registry
       - eureka-server
@@ -65,8 +65,8 @@ services:
       - eureka-server
     networks:
       - shared_network
-  personal-loan-vendor-finance:
-    build: ./personal-loan/personal-loan-vendor-finance
+  personal-loan-an-post:
+    build: ./personal-loan/personal-loan-an-post
     depends_on:
       - personal-loan-registry
       - eureka-server
@@ -94,15 +94,15 @@ services:
       - eureka-server
     networks:
       - shared_network
-  home-loan-avant-money:
-    build: ./home-loan/home-loan-avant-money
+  home-loan-ptsb:
+    build: ./home-loan/home-loan-ptsb
     depends_on:
       - home-loan-registry
       - eureka-server
     networks:
       - shared_network
-  home-loan-vendor-finance:
-    build: ./home-loan/home-loan-vendor-finance
+  home-loan-boi:
+    build: ./home-loan/home-loan-boi
     depends_on:
       - home-loan-registry
       - eureka-server

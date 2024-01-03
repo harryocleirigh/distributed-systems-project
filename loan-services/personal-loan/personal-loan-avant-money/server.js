@@ -59,11 +59,11 @@ app.post('/calculate-loan', (req, res) => {
     let interestRate = 0;
     
     if (creditScore < 600) {
-        interestRate = 0.14;
+        interestRate = 0.091;
     } else if (creditScore < 700) {
-        interestRate = 0.12;
+        interestRate = 0.084;
     } else {
-        interestRate = 0.09;
+        interestRate = 0.076;
     }
 
     // Calculate the monthly payment

@@ -5,22 +5,22 @@ const port = 6002;
 
 app.use(express.json());
 
-const providerName = 'Avant Money';
-const linkToImage = "https://pbs.twimg.com/profile_images/1374701476581412868/bydIeIxt_400x400.jpg";
+const providerName = 'Credit Union';
+const linkToImage = "https://pbs.twimg.com/profile_images/1478297231484727296/wkhDL6D4_400x400.jpg";
 
 const eurekaClient = new Eureka({
   instance: { 
-    app: 'HOME-LOAN-SERVICES', // Use a common Eureka app ID for all related services
-    instanceId: 'home-loan-avant-money', // Unique instance ID for this service
-    hostName: 'home-loan-avant-money',
-    ipAddr: 'home-loan-avant-money', // Adjust as needed for Docker networking
-    statusPageUrl: `http://home-loan-avant-money:${port}/info`,
-    healthCheckUrl: `http://home-loan-avant-money:${port}/health`,
+    app: 'STUDENT-LOAN-SERVICES', // Use a common Eureka app ID for all related services
+    instanceId: 'student-loan-credit-union', // Unique instance ID for this service
+    hostName: 'student-loan-credit-union',
+    ipAddr: 'student-loan-credit-union', // Adjust as needed for Docker networking
+    statusPageUrl: `http://student-loan-credit-union:${port}/info`,
+    healthCheckUrl: `http://student-loan-credit-union:${port}/health`,
     port: {
       '$': port,
       '@enabled': true,
     },
-    vipAddress: 'home-loan-avant-money',
+    vipAddress: 'student-loan-credit-union',
     dataCenterInfo: {
       '@class': 'com.netflix.appinfo.InstanceInfo$DefaultDataCenterInfo',
       name: 'MyOwn',
@@ -59,11 +59,11 @@ app.post('/calculate-loan', (req, res) => {
     let interestRate = 0;
     
     if (creditScore < 600) {
-        interestRate = 0.14;
+        interestRate = 0.058;
     } else if (creditScore < 700) {
-        interestRate = 0.12;
+        interestRate = 0.053;
     } else {
-        interestRate = 0.09;
+        interestRate = 0.047;
     }
 
     // Calculate the monthly payment
@@ -93,5 +93,5 @@ app.post('/calculate-loan', (req, res) => {
 });
 
 app.listen(port, async () => {
-    console.log(`Avant Money home loan service listening at http://home-loan-avant-money:${port}`);
+    console.log(`Credit Union student loan service listening at http://student-loan-credit-union:${port}`);
 });

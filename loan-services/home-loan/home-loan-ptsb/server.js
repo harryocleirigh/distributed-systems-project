@@ -5,22 +5,22 @@ const port = 6002;
 
 app.use(express.json());
 
-const providerName = 'Avant Money';
-const linkToImage = "https://pbs.twimg.com/profile_images/1374701476581412868/bydIeIxt_400x400.jpg";
+const providerName = 'PermanentTSB';
+const linkToImage = "https://pbs.twimg.com/profile_images/1713180948592791552/sfRNRTHO_400x400.jpg";
 
 const eurekaClient = new Eureka({
   instance: { 
-    app: 'STUDENT-LOAN-SERVICES', // Use a common Eureka app ID for all related services
-    instanceId: 'student-loan-avant-money', // Unique instance ID for this service
-    hostName: 'student-loan-avant-money',
-    ipAddr: 'student-loan-avant-money', // Adjust as needed for Docker networking
-    statusPageUrl: `http://student-loan-avant-money:${port}/info`,
-    healthCheckUrl: `http://student-loan-avant-money:${port}/health`,
+    app: 'HOME-LOAN-SERVICES', // Use a common Eureka app ID for all related services
+    instanceId: 'home-loan-ptsb', // Unique instance ID for this service
+    hostName: 'home-loan-ptsb',
+    ipAddr: 'home-loan-ptsb', // Adjust as needed for Docker networking
+    statusPageUrl: `http://home-loan-ptsb:${port}/info`,
+    healthCheckUrl: `http://home-loan-ptsb:${port}/health`,
     port: {
       '$': port,
       '@enabled': true,
     },
-    vipAddress: 'student-loan-avant-money',
+    vipAddress: 'home-loan-ptsb',
     dataCenterInfo: {
       '@class': 'com.netflix.appinfo.InstanceInfo$DefaultDataCenterInfo',
       name: 'MyOwn',
@@ -59,11 +59,11 @@ app.post('/calculate-loan', (req, res) => {
     let interestRate = 0;
     
     if (creditScore < 600) {
-        interestRate = 0.14;
+        interestRate = 0.051;
     } else if (creditScore < 700) {
-        interestRate = 0.12;
+        interestRate = 0.049;
     } else {
-        interestRate = 0.09;
+        interestRate = 0.041;
     }
 
     // Calculate the monthly payment
@@ -93,5 +93,5 @@ app.post('/calculate-loan', (req, res) => {
 });
 
 app.listen(port, async () => {
-    console.log(`Avant Money student loan service listening at http://student-loan-avant-money:${port}`);
+    console.log(`PTSB home loan service listening at http://home-loan-ptsb:${port}`);
 });

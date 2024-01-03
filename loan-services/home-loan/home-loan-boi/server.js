@@ -5,22 +5,22 @@ const port = 6003;
 
 app.use(express.json());
 
-const providerName = 'Vendor Finance';
-const linkToImage = "https://scontent-dub4-1.xx.fbcdn.net/v/t39.30808-6/302692377_499165928880375_6378380000885824443_n.jpg?_nc_cat=107&ccb=1-7&_nc_sid=efb6e6&_nc_ohc=IWrPqcTKVr0AX-pg0tS&_nc_ht=scontent-dub4-1.xx&oh=00_AfDk5BdVUteqSiDi-ilWnRVunCISib07tA3BaQmKOCj_kw&oe=65932300";
+const providerName = 'Bank Of Ireland';
+const linkToImage = "https://pbs.twimg.com/profile_images/1675809938487095297/DlQNzfCA_400x400.jpg";
 
 const eurekaClient = new Eureka({
   instance: { 
     app: 'HOME-LOAN-SERVICES', // Use a common Eureka app ID for all related services
-    instanceId: 'home-loan-vendor-finance', // Unique instance ID for this service
-    hostName: 'home-loan-vendor-finance',
-    ipAddr: 'home-loan-vendor-finance', // Adjust as needed for Docker networking
-    statusPageUrl: `http://home-loan-vendor-finance:${port}/info`,
-    healthCheckUrl: `http://home-loan-vendor-finance:${port}/health`,
+    instanceId: 'home-loan-boi', // Unique instance ID for this service
+    hostName: 'home-loan-boi',
+    ipAddr: 'home-loan-boi', // Adjust as needed for Docker networking
+    statusPageUrl: `http://home-loan-boi:${port}/info`,
+    healthCheckUrl: `http://home-loan-boi:${port}/health`,
     port: {
       '$': port,
       '@enabled': true,
     },
-    vipAddress: 'home-loan-vendor-finance',
+    vipAddress: 'home-loan-boi',
     dataCenterInfo: {
       '@class': 'com.netflix.appinfo.InstanceInfo$DefaultDataCenterInfo',
       name: 'MyOwn',
@@ -59,11 +59,11 @@ app.post('/calculate-loan', (req, res) => {
     let interestRate = 0;
     
     if (creditScore < 600) {
-        interestRate = 0.17;
+        interestRate = 0.07;
     } else if (creditScore < 700) {
-        interestRate = 0.145;
+        interestRate = 0.54;
     } else {
-        interestRate = 0.0777777;
+        interestRate = 0.039;
     }
 
     // Calculate the monthly payment
@@ -93,5 +93,5 @@ app.post('/calculate-loan', (req, res) => {
 });
 
 app.listen(port, async () => {
-    console.log(`Vendor finance home loan service listening at http://home-loan-vendor-finance:${port}`);
+    console.log(`BOI home loan service listening at http://home-loan-boi:${port}`);
 });
