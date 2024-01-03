@@ -3,44 +3,18 @@
 // Listens to the 'personal-loan' rabbit messaging queue for client requests
 // Sends loan offer to the gateway's 'offers-queue' for handling
 
-const Eureka = require('eureka-js-client').Eureka;
 const express = require('express');
 const cors = require('cors'); 
 const axios = require('axios');
 const app = express();
+
 const produce = require('./rabbitmq/producer');
 const consume = require('./rabbitmq/consumer');
+const client = require('./middleware/client')
+
 app.use(cors());
 app.use(express.json());
 const port = 6000;
-
-/**
- * Configure and Instantiate a Eureka Client
- * Creates a student-loan eureka discovery server
- */
-const client = new Eureka({
-  instance: {
-    app: 'student-loan-registry',
-    hostName: 'student-loan-registry',
-    ipAddr: 'student-loan-registry',
-    statusPageUrl: `http://student-loan-registry:${port}/info`,
-    healthCheckUrl: `http://student-loan-registry:${port}/health`,
-    port: {
-      '$': port,
-      '@enabled': true,
-    },
-    vipAddress: 'student-loan-registry',
-    dataCenterInfo: {
-      '@class': 'com.netflix.appinfo.InstanceInfo$DefaultDataCenterInfo',
-      name: 'MyOwn',
-    }
-  },
-  eureka: {
-    host: 'eureka-server',
-    port: 8761,
-    servicePath: '/eureka/apps/'
-  }
-});
 
 // Start the student-loan discovery server
 client.start(error => {
