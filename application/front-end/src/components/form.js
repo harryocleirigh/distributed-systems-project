@@ -147,11 +147,12 @@ const Form = ({fetchedQuotes, setFetchedQuotes, setHasGottenQuote, setLoanTypeFo
           </label>
           <label className='label-header'>
             Loan Amount:
-            <input className="label-form" type="number" name="loanAmount" onChange={handleLoanValueChange}/>
+            <input className="label-form" type="number" name="loanAmount" onChange={handleLoanValueChange} 
+            onWheel={(e) => e.target.blur()}/>
           </label>
           <label className='label-header'>
             Loan Term Length (in months):
-            <input className="label-form" type="number" name="loanTermLength" onChange={handleLoanTermLengthChange}/>
+            <input className="label-form" type="number" name="loanTermLength" onChange={handleLoanTermLengthChange} onWheel={(e) => e.target.blur()}/>
           </label>
           <h3 className='loan-form-header'> Employment Information</h3>
           <label className='label-header'>
@@ -181,7 +182,7 @@ const Form = ({fetchedQuotes, setFetchedQuotes, setHasGottenQuote, setLoanTypeFo
           </label>
           <label className='label-header'>
             Annual Income:
-            <input className="label-form" type="number" name="annualIncome" onChange={e => setAnnualIncome(e.target.value)}/>
+            <input className="label-form" type="number" name="annualIncome" onChange={e => setAnnualIncome(e.target.value)} onWheel={(e) => e.target.blur()}/>
           </label>
           <h3 className='loan-form-header'> Credit History</h3>
           <label className='label-header'>
@@ -196,11 +197,11 @@ const Form = ({fetchedQuotes, setFetchedQuotes, setHasGottenQuote, setLoanTypeFo
           </label>
           <label className='label-header'>
             What percentage of your available credit card limit do you typically utilise:
-            <input className="label-form" type="number" name="creditUtilisation" min="0" max="100" onChange={e => setCreditUtilisation(e.target.value)}/>
+            <input className="label-form" type="number" name="creditUtilisation" min="0" max="100" onChange={e => setCreditUtilisation(e.target.value)} onWheel={(e) => e.target.blur()}/>
           </label>
           <label className='label-header'>
             How many years have you been using credit:
-            <input className="label-form" type="number" name="creditUseLength" min="0" max="100" onChange={e => setCreditUseLength(e.target.value)}/>
+            <input className="label-form" type="number" name="creditUseLength" min="0" max="100" onChange={e => setCreditUseLength(e.target.value)} onWheel={(e) => e.target.blur()}/>
           </label>
           <label className='label-header'>
             Have you applied for any new credit or loans in the past 12 months:
@@ -230,11 +231,11 @@ const Form = ({fetchedQuotes, setFetchedQuotes, setHasGottenQuote, setLoanTypeFo
           </label>
           <label className='label-header'>
             What is your total monthly debt payment as a percentage of your monthly income:
-            <input className="label-form" type="number" name="debtToIncomeRatio" min="0" max="100" onChange={e => setDebtToIncomeRatio(e.target.value)} />
+            <input className="label-form" type="number" name="debtToIncomeRatio" min="0" max="100" onChange={e => setDebtToIncomeRatio(e.target.value)} onWheel={(e) => e.target.blur()} />
           </label>
           <label className='label-header'>
             What is the total amount of your current debts, including loans and credit cards:
-            <input className="label-form" type="number" name="currentDebt" min="0" max="10000000" onChange={e => setCurrentDebt(e.target.value)}/>
+            <input className="label-form" type="number" name="currentDebt" min="0" max="10000000" onChange={e => setCurrentDebt(e.target.value)} onWheel={(e) => e.target.blur()}/>
           </label>
           <button button onClick={submitApplication} className='cta-button'> Submit Application</button>
         </form>
