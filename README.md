@@ -1,5 +1,6 @@
-# Final Project - COMP41720-Distributed Systems
+# Final Project - COMP41720 - Distributed Systems
 ## Team FinTech Service Aggregator
+### Distributed Systems - Group - 12
 
 ## How to run our application:
 * If using a Mac laptop, turn off Airplay Receiver on System Settings > General > AirDrop & Handoff > Airplay Receiver.
