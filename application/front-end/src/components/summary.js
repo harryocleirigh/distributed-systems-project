@@ -31,7 +31,7 @@ const Summary = ({fetchedQuotes, loanType, loanValue, loanMonths}) => {
         <div className="summary-holder">
             <div style={{width: '100%', display: 'flex', flexDirection: 'column', marginLeft: '24px'}}>
                 <h2>Summary</h2>
-                <p>You requested a {loanType} loan for €{loanValue} over {loanMonths}</p>
+                <p>You requested a {loanType} loan for €{loanValue} over {loanMonths} months</p>
                 <h4>Quotes received from partnered Vendors</h4>
             </div>
             {summaryData.length > 0 ? summaryData : <p>No quotes available.</p>}
